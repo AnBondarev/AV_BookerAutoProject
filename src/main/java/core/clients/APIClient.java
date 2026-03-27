@@ -12,6 +12,7 @@ import java.util.Properties;
 public class APIClient {
 
     private final String baseUrl;
+    private String token;
 
     public APIClient() {
         this.baseUrl = dtetrmineBaseUrl();
@@ -41,6 +42,23 @@ public class APIClient {
                 .baseUri(baseUrl)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json");
+    }
+
+    public void createToken (String username, String password){
+        // Формирование JSON тела для запроса
+        String requestBody = String.format("{ \"username\": \"%s\", \"password\": \"%s\" }", username, password);
+
+        Response response = getRequestSpec()
+                .body(requestBody)
+                .when()
+                .post(ApiEndpoints.AUTH.getPath())
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+
+        token = response.jsonPath().getString("token");
+
     }
 
     //GET /ping
