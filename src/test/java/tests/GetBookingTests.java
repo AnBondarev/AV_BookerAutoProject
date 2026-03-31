@@ -43,7 +43,7 @@ public class GetBookingTests {
 
     @Test
     public void testGetBookingById() throws Exception {
-        Response response = apiClient.getBookingById(1);
+        Response response = apiClient.getBookingById(2, 200);
 
         assertThat(response.getStatusCode()).isEqualTo(200);
 
