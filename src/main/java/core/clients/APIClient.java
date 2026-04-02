@@ -124,4 +124,18 @@ public class APIClient {
                 .extract()
                 .response();
     }
+
+    //POST /booking
+    public Response createBooking(String newBooking, int expectedStatusCode) {
+        return getRequestSpec()
+                .body(newBooking)
+                .log().all()
+                .when()
+                .post(ApiEndpoints.BOOKING.getPath())
+                .then()
+                .log().all()
+                .statusCode(expectedStatusCode)
+                .extract()
+                .response();
+    }
 }
