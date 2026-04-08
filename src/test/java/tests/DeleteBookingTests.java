@@ -1,26 +1,15 @@
 package tests;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import core.clients.APIClient;
 import core.models.BookingIDs;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DeleteBookingTests {
-    private APIClient apiClient;
-    private ObjectMapper objectMapper;
-
-    @BeforeEach
-    public void setup() {
-        apiClient = new APIClient();
-        objectMapper = new ObjectMapper();
-    }
+public class DeleteBookingTests extends BaseBooking {
 
     @Test
     public void testDeleteBooking() throws Exception {
