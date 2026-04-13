@@ -112,10 +112,31 @@ public class APIClient {
                 .response();
     }
 
+    //GET /booking?query
+    public Response getBookingWitchParams(String firstName, String lastName, String checkin, String checkout, int expectedStatusCode) {
+
+        RequestSpecification spec = getRequestSpec();
+        if (firstName != null) spec.queryParam("firstname", firstName);
+        if (lastName != null) spec.queryParam("lastname", lastName);
+        if (checkin != null) spec.queryParam("checkin", checkin);
+        if (checkout != null) spec.queryParam("checkout", checkout);
+
+        return spec
+                .when()
+                .log().all()
+                .get(ApiEndpoints.BOOKING.getPath())
+                .then()
+                .log().all()
+                .statusCode(expectedStatusCode)
+                .extract()
+                .response();
+    }
+
     //DELETE /booking/:id
     public Response deleteBooking(int bookingId) {
         return getRequestSpec()
                 .pathParam("id", bookingId)
+                .log().all()
                 .when()
                 .delete(ApiEndpoints.BOOKING.getPath() + "/{id}")
                 .then()
@@ -135,6 +156,36 @@ public class APIClient {
                 .then()
                 .log().all()
                 .statusCode(expectedStatusCode)
+                .extract()
+                .response();
+    }
+
+    //PUT /booking/:id
+    public Response updateBooking(String updateBooking, int bookingId) {
+        return getRequestSpec()
+                .pathParam("id", bookingId)
+                .body(updateBooking)
+                .log().all()
+                .when()
+                .put(ApiEndpoints.BOOKING.getPath() + "/{id}")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .extract()
+                .response();
+    }
+
+    //PATCH /booking/:id
+    public Response partialUpdateBooking(String updateBooking, int bookingId) {
+        return getRequestSpec()
+                .pathParam("id", bookingId)
+                .body(updateBooking)
+                .log().all()
+                .when()
+                .patch(ApiEndpoints.BOOKING.getPath() + "/{id}")
+                .then()
+                .log().all()
+                .statusCode(200)
                 .extract()
                 .response();
     }
