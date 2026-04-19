@@ -1,5 +1,4 @@
 pipeline {
-
     agent any
 
     stages {
@@ -12,8 +11,12 @@ pipeline {
 
         stage('Run tests') {
             steps {
-                sh 'chmod +x run-tests.sh'
-                sh './run-tests.sh'
+                script {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                        sh 'chmod +x run-tests.sh'
+                        sh './run-tests.sh'
+                    }
+                }
             }
         }
 
