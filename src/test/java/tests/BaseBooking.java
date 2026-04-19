@@ -10,6 +10,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BaseBooking {
@@ -35,14 +36,15 @@ public class BaseBooking {
         //Переформатирование в строку объекта Booking
         String requestBody = objectMapper.writeValueAsString(newBooking);
         //Выполняем POST-запрос к эндпоинту через APIClient
-        Response response = apiClient.createBooking(requestBody, 200);
-        //Проверка статус-кода
-        assertThat(response.getStatusCode()).isEqualTo(200);
+        Response response = step("Создание тестового бронирования", () ->
+                apiClient.createBooking(requestBody, 200)
+        );
         //Переформатируем тело ответа в строку
         String responseBody = response.asString();
         //Десериализуем тело ответа в объект Booking - objectMapper читает данные из responseBody и сопоставляет с классом CreatedBooking
         createdBooking = objectMapper.readValue(responseBody, CreatedBooking.class);
-        BookingId = createdBooking.getBookingid();
+        BookingId = step("Бронированию присвоен id: " + createdBooking.getBookingid(), () ->
+                createdBooking.getBookingid());
     }
 
     @AfterEach
@@ -52,6 +54,8 @@ public class BaseBooking {
         //Вызов DELETE-метода для удаления созданного бронирования
         apiClient.deleteBooking(createdBooking.getBookingid());
         //Проверка, что созданный объект действительно удалился
-        assertThat(apiClient.getBookingById(createdBooking.getBookingid(), 404).getStatusCode()).isEqualTo(404);
+        step("Удаление бронирования: проверка удаления бронирования id: " + createdBooking.getBookingid(), () ->
+                assertThat(apiClient.getBookingById(createdBooking.getBookingid(), 404).getStatusCode()).isEqualTo(404)
+        );
     }
 }

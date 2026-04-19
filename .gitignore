@@ -25,3 +25,4 @@ replay_pid*
 .gradle
 .DS_Store
 build
+allure-results
