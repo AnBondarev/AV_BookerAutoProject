@@ -1,26 +1,27 @@
 pipeline {
 
-    agent any
+      agent any
 
-    stages {
+      stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
+          stage('Checkout') {
+              steps {
+                  checkout scm
+              }
+          }
 
-        stage('Run tests') {
-            steps {
-                sh 'chmod +x run-test.sh'
-                sh './run-test.sh'
-            }
-        }
+          stage('Run tests') {
+              steps {
+                  sh 'chmod +x run-test.sh'
+                  sh './run-test.sh'
+              }
+          }
 
-        stage('Allure Report') {
-            steps {
-                allure results: [[path: 'allure-results']]
-            }
-        }
-    }
-}
+      }
+
+      post {
+          always {
+              allure results: [[path: 'allure-results']]
+          }
+      }
+  }
